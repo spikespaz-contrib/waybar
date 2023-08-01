@@ -1,7 +1,4 @@
-{ lib
-, waybar
-, version
-}:
+{ lib, waybar, version }:
 
 waybar.overrideAttrs (prev: {
   inherit version;
@@ -9,12 +6,8 @@ waybar.overrideAttrs (prev: {
 
   src = lib.cleanSourceWith {
     filter = name: type:
-      let
-        baseName = baseNameOf (toString name);
-      in
-        ! (
-          lib.hasSuffix ".nix" baseName
-        );
+      let baseName = baseNameOf (toString name);
+      in !(lib.hasSuffix ".nix" baseName);
     src = lib.cleanSource ../.;
   };
 })
