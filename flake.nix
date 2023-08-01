@@ -12,7 +12,7 @@
 
   outputs = { self, devshell, nixpkgs, flake-compat }:
     let
-      inherit (nixpkgs) lib;
+      lib = nixpkgs.lib.extend (import ./nix/lib.nix);
 
       systems = [
         "x86_64-linux"
@@ -23,16 +23,12 @@
           inherit system;
         });
 
-      mkDate = longDate: (lib.concatStringsSep "-" [
-        (builtins.substring 0 4 longDate)
-        (builtins.substring 4 2 longDate)
-        (builtins.substring 6 2 longDate)
-      ]);
+      packageDate = (lib.mkDate (self.lastModifiedDate or "19700101")) + "_" + (self.shortRev or "dirty");
     in
     {
       overlays.default = final: prev: {
         waybar = final.callPackage ./nix/default.nix {
-          version = prev.waybar.version + "+date=" + (mkDate (self.lastModifiedDate or "19700101")) + "_" + (self.shortRev or "dirty");
+          version = prev.waybar.version + "+date=" + packageDate;
         };
       };
 
