@@ -10,7 +10,7 @@
     };
   };
 
-  outputs = { self, devshell, nixpkgs, flake-compat }:
+  outputs = { self, devshell, nixpkgs, ... }:
     let
       lib = nixpkgs.lib.extend (import ./nix/lib.nix);
 
