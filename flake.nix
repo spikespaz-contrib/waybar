@@ -4,13 +4,14 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     devshell.url = "github:numtide/devshell";
+    nixfmt.url = "github:serokell/nixfmt";
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
     };
   };
 
-  outputs = { self, devshell, nixpkgs, ... }:
+  outputs = { self, nixpkgs, devshell, nixfmt, ... }:
     let
       lib = nixpkgs.lib.extend (import ./nix/lib.nix);
 
@@ -50,5 +51,8 @@
           {
             default = pkgs.callPackage ./nix/devshell.nix {};
           });
+
+      formatter =
+        lib.genAttrs systems (system: nixfmt.packages.${system}.default);
     };
 }
